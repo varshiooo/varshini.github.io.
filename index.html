@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER | Planetary Atmospheric Engine</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-text">INITIALIZING AETHER CORE...</div>
+        </div>
+    </div>
+
+    <main id="app">
+        <div id="cesiumContainer"></div>
+
+        <!-- HUD Overlay -->
+        <div class="hud-overlay">
+            <div class="scanlines"></div>
+
+            <!-- Header -->
+            <header class="mission-header">
+                <div class="logo">
+                    <span class="glitch-text" data-text="AETHER">AETHER</span>
+                </div>
+                <div class="mission-status">
+                    <div class="status-indicator online"></div>
+                    <span class="status-label">SYSTEM-EARTH-TWIN</span>
+                </div>
+                <div class="coordinates" id="coords-display">
+                    LAT: 00.0000 | LON: 00.0000 | ALT: 0.0KM
+                </div>
+            </header>
+
+            <!-- Left Panel: Atmospheric Composition -->
+            <section class="side-panel left-panel">
+                <div class="panel-header">ATMOSPHERIC COMPOSITION</div>
+                <div class="data-group">
+                    <div class="data-item">
+                        <label>CH₄ METHANE</label>
+                        <div class="value-bar">
+                            <div class="fill" style="width: 65%;"></div>
+                        </div>
+                        <span class="value">1890 PPB <span class="trend up">▲</span></span>
+                    </div>
+                    <div class="data-item">
+                        <label>CO₂ CARBON DIOXIDE</label>
+                        <div class="value-bar">
+                            <div class="fill" style="width: 82%;"></div>
+                        </div>
+                        <span class="value">421.5 PPM <span class="trend up">▲</span></span>
+                    </div>
+                    <div class="data-item">
+                        <label>NO₂ NITROGEN DIOXIDE</label>
+                        <div class="value-bar">
+                            <div class="fill" style="width: 30%;"></div>
+                        </div>
+                        <span class="value">12.4 PPB <span class="trend down">▼</span></span>
+                    </div>
+                </div>
+
+                <div class="panel-header mt-20">GRAVITY FIELD ANOMALIES</div>
+                <div class="gravity-chart" id="gravity-chart">
+                    <div class="chart-line"></div>
+                </div>
+                <div class="data-item">
+                    <label>MASS REDISTRIBUTION</label>
+                    <span class="value">± 4.2cm SWE</span>
+                </div>
+            </section>
+
+            <!-- Right Panel: AI Forecast & Alerts -->
+            <section class="side-panel right-panel">
+                <div class="panel-header">AI CLIMATE FORECAST</div>
+                <div class="forecast-item">
+                    <div class="forecast-time">T + 24H</div>
+                    <div class="forecast-desc">Methane plume expansion expected over Arctic Shelf.</div>
+                </div>
+                <div class="forecast-item warning">
+                    <div class="forecast-time">T + 48H</div>
+                    <div class="forecast-desc">Wildfire smoke transport: Canada → US East Coast.</div>
+                </div>
+
+                <div class="panel-header mt-20">ENVIRONMENTAL ALERTS</div>
+                <ul class="alert-list" id="alert-list">
+                    <li class="alert-item urgent">Thermal Inversion detected at [42.3, -71.0]</li>
+                    <li class="alert-item">Sentinel-5P stream sync: OK</li>
+                </ul>
+            </section>
+
+            <!-- Bottom Toolbar -->
+            <nav class="bottom-toolbar">
+                <button class="tool-btn active" id="btn-buoyancy">
+                    <span class="icon">↑</span>
+                    <span class="label">BUOYANCY</span>
+                </button>
+                <button class="tool-btn" id="btn-ghg">
+                    <span class="icon">☁</span>
+                    <span class="label">GHG</span>
+                </button>
+                <button class="tool-btn" id="btn-smoke">
+                    <span class="icon">♨</span>
+                    <span class="label">SMOKE</span>
+                </button>
+                <button class="tool-btn" id="btn-ozone">
+                    <span class="icon">⚛</span>
+                    <span class="label">OZONE</span>
+                </button>
+                <button class="tool-btn" id="btn-pm25">
+                    <span class="icon">▦</span>
+                    <span class="label">PM2.5</span>
+                </button>
+                <button class="tool-btn" id="btn-gravity">
+                    <span class="icon">☍</span>
+                    <span class="label">GRAVITY</span>
+                </button>
+                <button class="tool-btn" id="btn-mri">
+                    <span class="icon">Ξ</span>
+                    <span class="label">MRI</span>
+                </button>
+                <button class="tool-btn" id="btn-market">
+                    <span class="icon">⌬</span>
+                    <span class="label">MARKET</span>
+                </button>
+            </nav>
+
+            <!-- Floating Intelligence Panels -->
+            <div id="market-panel" class="market-panel">
+                <div class="panel-header">CARBON ECONOMY HUB</div>
+                <div class="market-stats">
+                    <div class="stat-item"><label>CREDIT PRICE</label><span class="val">$84.20</span></div>
+                    <div class="stat-item"><label>VOL</label><span class="val">1.2B</span></div>
+                </div>
+                <div class="offset-list">
+                    <div class="offset-item">
+                        <div class="offset-title">Amazon Reforestation</div>
+                        <button class="buy-btn">INVEST</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="country-info" class="country-panel"></div>
+
+            <div class="ai-chat-container">
+                <button id="chat-toggle" class="chat-toggle">✦ AI ASSISTANT</button>
+                <div id="chat-window" class="chat-window">
+                    <div class="chat-header">AETHER CORE AI</div>
+                    <div class="chat-messages">
+                        <div class="msg bot">Greetings. I am Aether. How can I assist?</div>
+                    </div>
+                    <div class="chat-input"><input type="text" placeholder="Query data..."></div>
+                </div>
+            </div>
+
+            <div class="recommendations-panel">
+                <div class="panel-header">AI RECOMMENDATIONS</div>
+                <div class="rec-item">
+                    <div class="rec-title">MITIGATION</div>
+                    <div class="rec-desc">Increase methane capture in Permian Basin.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Dossier (Overlay) -->
+        <div id="research-dossier" class="dossier-overlay">
+            <div class="dossier-container">
+                <header class="dossier-header">
+                    <div class="dossier-title">PLANETARY RESEARCH DOSSIER // <span
+                            id="dossier-region">REGION_NAME</span></div>
+                    <button id="close-dossier" class="close-btn">✖ CLOSE</button>
+                </header>
+                <div class="dossier-content">
+                    <div class="dossier-grid">
+                        <div class="dossier-section">
+                            <div class="section-title">MARKET ANALYSIS</div>
+                            <div id="dossier-market-data" class="section-body"></div>
+                        </div>
+                        <div class="dossier-section">
+                            <div class="section-title">ENV METRICS</div>
+                            <div id="dossier-env-data" class="section-body"></div>
+                        </div>
+                        <div class="dossier-section large">
+                            <div class="section-title">RECOMMENDATIONS</div>
+                            <div id="dossier-recs" class="section-body"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>
